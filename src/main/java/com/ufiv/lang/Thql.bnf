@@ -1,0 +1,44 @@
+// Copyright 2000-2022 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+{
+  parserClass="com.ufiv.lang.parser.ThqlParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Thql"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.ufiv.lang.psi"
+  psiImplPackage="com.ufiv.lang.psi.impl"
+
+  elementTypeHolderClass="com.ufiv.lang.psi.ThqlTypes"
+  elementTypeClass="com.ufiv.lang.psi.ThqlElementType"
+  tokenTypeClass="com.ufiv.lang.psi.ThqlTokenType"
+
+  psiImplUtilClass="com.ufiv.lang.psi.impl.ThqlPsiImplUtil"
+}
+
+//statement ::= SELECT COLUMN FROM TABLE;
+
+create_statement ::= CREATE EXTERNAL? TABLE (IF NOT EXISTS)? (db_name separator)? table_name '(' (col_name data_type COMMENT col_comment COMMA) ')'
+    COMMENT table_comment
+    STORED AS file_format{
+    pin=1
+    recoverWhile="recover_stat"
+//  mixin="org.intellij.sdk.language.psi.impl.SimpleNamedElementImpl"
+//  implements="org.intellij.sdk.language.psi.SimpleNamedElement"
+
+}
+
+private recover_stat ::= !CREATE
+
+db_name ::= IDENTITY
+
+separator ::= '::'|'.'
+
+col_name ::= IDENTITY
+
+data_type ::= 'string'|'bigint'
+
+table_comment ::= "'" (!"'")* "'"
+
+file_format ::= IDENTITY
+
